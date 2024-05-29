@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "465698101894",
+    "project_id": "koyam-recette",
+    "storage_bucket": "koyam-recette.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465698101894:android:902806aff5fc2951628f07",
+        "android_client_info": {
+          "package_name": "com.example.finalproj"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtQGlj_reTMakHJgH2JPysOdyqiX0Lp_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
