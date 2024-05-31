@@ -1,14 +1,17 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recipe_repository/recipe_repository.dart';
 import 'recipe_details_screen.dart';
+import 'recipe_service.dart';
 
 
 class DelRecipeScreen extends StatefulWidget {
   final List<Recipe> recipes;
+  
 
   const DelRecipeScreen({Key? key, required this.recipes}) : super(key: key);
 
@@ -17,15 +20,28 @@ class DelRecipeScreen extends StatefulWidget {
 }
 
 class _DelRecipeScreenState extends State<DelRecipeScreen> {
+  final RecipeService _recipeService = RecipeService();
   List<Recipe> filteredRecipes = [];
   late TextEditingController _searchController;
+  List<DocumentSnapshot<Map<String, dynamic>>> favorites = [];
 
   @override
   void initState() {
     super.initState();
     filteredRecipes = widget.recipes;
     _searchController = TextEditingController();
+    _fetchFavorites();
   }
+
+  void _fetchFavorites() {
+  _recipeService.getFavoritesWithDetails().listen((List<DocumentSnapshot<Map<String, dynamic>>>? userFavorites) {
+    if (userFavorites != null) {
+      setState(() {
+        favorites = userFavorites;
+      });
+    }
+  });
+}
 
   @override
   void dispose() {
@@ -73,6 +89,10 @@ class _DelRecipeScreenState extends State<DelRecipeScreen> {
               itemCount: filteredRecipes.length,
               itemBuilder: (context, index) {
                 final recipe = filteredRecipes[index];
+                final isFavorite = favorites
+                      .map((snapshot) => snapshot.data()!['recipeId'])
+                      .toList()
+                      .contains(filteredRecipes[index].recipeId);
                 return Material(
                   elevation: 3,
                   color: Colors.white,
@@ -113,12 +133,15 @@ class _DelRecipeScreenState extends State<DelRecipeScreen> {
                                     shape: BoxShape.circle,
                                   ),
                                   child: IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.favorite_border,
-                                      color: Colors.black,
-                                      size: 23,
-                                    ),
+                                    onPressed: () {
+                                                final recipeId = filteredRecipes[index].recipeId;
+                                                _recipeService.toggleFavorite(recipeId, filteredRecipes[index].name, filteredRecipes[index].picture, filteredRecipes[index].time, filteredRecipes[index].category);
+                                                _fetchFavorites();
+                                              },
+                                              icon: Icon(
+                                                isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                                                color: isFavorite ? Colors.red : Colors.black,
+                                                size: 23,)
                                   ),
                                 ),
                               ),

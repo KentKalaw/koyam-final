@@ -14,6 +14,8 @@ import 'package:recipe_repository/recipe_repository.dart';
 
 import '../../../components/my_text_field.dart';
 import '../components/macro.dart';
+import 'ingredients_controller.dart';
+import 'instructions_controller.dart';
 
 class CreateRecipeScreen extends StatefulWidget {
   const CreateRecipeScreen({super.key});
@@ -31,6 +33,8 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
   final proteinsController = TextEditingController();
   final fatController = TextEditingController();
   final carbsController = TextEditingController();
+  List<IngredientControllers> ingredientsControllers = [];
+  List<InstructionControllers> instructionsControllers = [];
   bool creationRequired = false;
 
   final _formKey = GlobalKey<FormState>();
@@ -198,6 +202,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
                             },
                           ),
                         ),
+                        
                         const SizedBox(height: 10),
                         SizedBox(
                           width: 400,
@@ -220,6 +225,103 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
+                        ...ingredientsControllers.asMap().entries.map(
+                                    (entry) => Row(
+                                      children: [
+                                        Expanded(
+                                          child: MyTextField(
+                                            controller: entry.value.nameController,
+                                            hintText: 'Ingredient Name',
+                                            obscureText: false,
+                                            keyboardType: TextInputType.text,
+                                            // Add other properties such as validator, suffixIcon, etc.
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: MyTextField(
+                                            controller: entry.value.quantityController,
+                                            hintText: 'Quantity',
+                                            obscureText: false,
+                                            keyboardType: TextInputType.text,
+                                            // Add other properties such as validator, suffixIcon, etc.
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.remove),
+                                          onPressed: () {
+                                            setState(() {
+                                              ingredientsControllers.removeAt(entry.key);
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextButton.icon(
+                                          onPressed: () {
+                                            setState(() {
+                                              ingredientsControllers.add(IngredientControllers(
+                                                nameController: TextEditingController(),
+                                                quantityController: TextEditingController(),
+                                              ));
+                                            });
+                                          },
+                                          icon: Icon(Icons.add, color: Colors.black,),
+                                          label: Text('Add Ingredient', style: TextStyle(color: Colors.black),),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                    SizedBox(height: 10),
+
+                        ...instructionsControllers.asMap().entries.map(
+                                    (entry) => Row(
+                                      children: [
+                                        Expanded(
+                                          child: MyTextField(
+                                            controller: entry.value.stepsController,
+                                            hintText: 'Steps',
+                                            obscureText: false,
+                                            keyboardType: TextInputType.text,
+                                            // Add other properties such as validator, suffixIcon, etc.
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        IconButton(
+                                          icon: Icon(Icons.remove),
+                                          onPressed: () {
+                                            setState(() {
+                                              instructionsControllers.removeAt(entry.key);
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextButton.icon(
+                                          onPressed: () {
+                                            setState(() {
+                                              instructionsControllers.add(InstructionControllers(
+                                                stepsController: TextEditingController(),
+                                              ));
+                                            });
+                                          },
+                                          icon: Icon(Icons.add, color: Colors.black,),
+                                          label: Text('Add Steps', style: TextStyle(color: Colors.black),),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -266,11 +368,14 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
                               ),
                             ],
                           ),
+                          
                         ),
-                      ],
+                ],
                     ),
                   ),
                   SizedBox(height: 20),
+
+                  
                   !creationRequired
                       ? SizedBox(
                           width: 400,
@@ -297,6 +402,17 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
                                           int.parse(fatController.text);
                                       recipe.macros.carbs =
                                           int.parse(carbsController.text);
+                                           recipe.ingredients = ingredientsControllers
+                                          .map((controller) => Ingredients(
+                                        name: controller.nameController.text,
+                                        quantity: controller.quantityController.text,
+                                      ))
+                                          .toList();
+                                          recipe.instructions = instructionsControllers
+                                          .map((controller) => Instructions(
+                                        steps: controller.stepsController.text,
+                                      ))
+                                          .toList();
                                       
                                       
                                     });

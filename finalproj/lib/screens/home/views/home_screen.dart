@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
-import 'package:finalproj/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finalproj/screens/home/blocs/get_recipe_bloc/get_recipe_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'del_recipe_screen.dart';
 import '../../../components/home_app_bar.dart';
+import 'favorites_screen.dart';
 import 'recipe_details_screen.dart';
+import 'recipe_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final RecipeService _recipeService = RecipeService();
   final TextEditingController _searchController = TextEditingController();
 
 @override
@@ -28,6 +32,23 @@ void dispose() {
   String selectedCategory = 'All';
 
   final List<String> categories = ['All', 'Breakfast', 'Lunch', 'Dinner'];
+  List<DocumentSnapshot<Map<String, dynamic>>> favorites = [];
+
+    @override
+  void initState() {
+    super.initState();
+    _fetchFavorites();
+  }
+
+  void _fetchFavorites() {
+  _recipeService.getFavoritesWithDetails().listen((List<DocumentSnapshot<Map<String, dynamic>>>? userFavorites) {
+    if (userFavorites != null) {
+      setState(() {
+        favorites = userFavorites;
+      });
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +191,10 @@ void dispose() {
                       scrollDirection: Axis.horizontal,
                       itemCount: filteredRecipes.length,
                       itemBuilder: (context, int i) {
+                      final isFavorite = favorites
+                      .map((snapshot) => snapshot.data()!['recipeId'])
+                      .toList()
+                      .contains(filteredRecipes[i].recipeId);
                         return Material(
                           elevation: 3,
                           color: Colors.white,
@@ -210,12 +235,16 @@ void dispose() {
                                             shape: BoxShape.circle,
                                           ),
                                           child: IconButton(
-                                            onPressed: () {},
-                                            icon: Icon(
-                                              CupertinoIcons.heart,
-                                              color: Colors.black,
-                                              size: 23,
-                                            ),
+                                              onPressed: () {
+                                                final recipeId = filteredRecipes[i].recipeId;
+                                                _recipeService.toggleFavorite(recipeId, filteredRecipes[i].name, filteredRecipes[i].picture, filteredRecipes[i].time, filteredRecipes[i].category);
+                                                _fetchFavorites();
+                                              },
+                                              icon: Icon(
+                                                isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                                                color: isFavorite ? Colors.red : Colors.black,
+                                                size: 23,
+                                              ),
                                           ),
                                         ),
                                       ),

@@ -2,10 +2,10 @@
 
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:user_repository/src/entities/entities.dart';
 import 'package:user_repository/src/models/user.dart';
@@ -17,6 +17,7 @@ class FirebaseUserRepo implements UserRepository {
 
 FirebaseUserRepo({
     FirebaseAuth? firebaseAuth,
+    
   }) : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   

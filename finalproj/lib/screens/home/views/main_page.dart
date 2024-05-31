@@ -20,7 +20,6 @@ class _HomePageState extends State<HomePage> {
   List screens = const [
     HomeScreen(),
     FavoritesScreen(),
-    DelRecipeScreen(recipes: [],),
     ProfileScreen(),
   ];
 
@@ -73,6 +72,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+           
             GestureDetector(
               onTap: () => setState(() {
                 currentTab = 2;
@@ -80,34 +80,14 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Icon(
-                    currentTab == 2 ? Icons.search : Icons.search,
+                    currentTab == 2 ? Icons.person : Icons.person,
                     color: currentTab == 2 ? kprimaryColor : Colors.grey,
-                  ),
-                  Text(
-                    "Search",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: currentTab == 2 ? kprimaryColor : Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () => setState(() {
-                currentTab = 3;
-              }),
-              child: Column(
-                children: [
-                  Icon(
-                    currentTab == 3 ? Icons.person : Icons.person,
-                    color: currentTab == 3 ? kprimaryColor : Colors.grey,
                   ),
                   Text(
                     "Profile",
                     style: TextStyle(
                       fontSize: 14,
-                      color: currentTab == 3 ? kprimaryColor : Colors.grey,
+                      color: currentTab == 2 ? kprimaryColor : Colors.grey,
                     ),
                   ),
                 ],

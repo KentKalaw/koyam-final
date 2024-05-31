@@ -30,6 +30,8 @@ dependencies:
   # path: ^1.9.0
   image_cropper_for_web: ^4.0.0
   fastor_app_ui_widget: ^1.3.61
+  get: ^4.6.6
+  get_storage: ^2.1.1
   
   
 

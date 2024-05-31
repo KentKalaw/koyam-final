@@ -1,12 +1,13 @@
-import 'package:finalproj_admin/src/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../blocs/authentication_bloc/authentication_bloc.dart';
+
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
