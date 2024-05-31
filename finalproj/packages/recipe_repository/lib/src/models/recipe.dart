@@ -11,6 +11,9 @@ class Recipe {
   final Macros macros;
   final List<Ingredients> ingredients;
   final List<Instructions> instructions;
+  final double rating;
+  final int ratingCount;
+
 
 
   Recipe({
@@ -23,6 +26,8 @@ class Recipe {
     required this.macros,
     required this.ingredients,
     required this.instructions,
+    required this.rating,
+    required this.ratingCount,
 
 });
 
@@ -37,6 +42,8 @@ class Recipe {
       macros: macros,
       ingredients: ingredients.map((ingredients) => ingredients.toEntity()).toList(),
       instructions: instructions.map((instructions) => instructions.toEntity()).toList(),
+      rating: rating,
+      ratingCount: ratingCount,
       
     );
   }
@@ -57,6 +64,8 @@ class Recipe {
       instructions: entity.instructions.map((instructionsEntity) => Instructions(
         steps: instructionsEntity.steps,
       )).toList(),
+      rating: entity.rating,
+      ratingCount: entity.ratingCount,
 
     );
   }

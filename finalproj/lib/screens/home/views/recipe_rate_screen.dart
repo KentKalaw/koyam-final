@@ -1,15 +1,38 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:recipe_repository/recipe_repository.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import 'recipe_rate_screen.dart';
+import 'home_screen.dart';
 
-class InstructionsScreen extends StatelessWidget {
+class RateScreen extends StatelessWidget {
   final Recipe recipe;
+  const RateScreen({required this.recipe, super.key});
 
-  const InstructionsScreen({super.key, required this.recipe});
+  Future<void> updateRating(double rating) async {
+    // Reference to the specific recipe document in Firestore
+    final recipeRef = FirebaseFirestore.instance.collection('recipes').doc(recipe.recipeId);
+
+    // Get the current rating and rating count
+    final snapshot = await recipeRef.get();
+    if (snapshot.exists) {
+      final data = snapshot.data();
+      if (data != null) {
+        final currentRating = data['rating'] as double? ?? 0.0;
+        final ratingCount = data['ratingCount'] as int? ?? 0;
+
+        // Calculate the new rating
+        final newRating = ((currentRating * ratingCount) + rating) / (ratingCount + 1);
+
+        // Update the rating and rating count in Firestore
+        await recipeRef.update({
+          'rating': newRating,
+          'ratingCount': ratingCount + 1,
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,53 +94,33 @@ class InstructionsScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 20),
-                      Text(
-                        'Step by step instructions:',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      Center(
+                        child: Text(
+                          "Rate the food!",
+                          style: GoogleFonts.poppins(
+                            fontSize: 17,
+                            
+                          ),
                         ),
                       ),
-                      SizedBox(height: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: recipe.instructions.asMap().entries.map((entry) {
-                          int index = entry.key;
-                          var instruction = entry.value;
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: Colors.black,
-                                  child: Text(
-                                    (index + 1).toString(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      instruction.steps,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                      SizedBox(height: 20),
+                      Center(
+                        child: RatingBar.builder(
+                          initialRating: 0,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 5),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                          ),
+                          onRatingUpdate: (rating) async {
+                            print(rating);
+                            await updateRating(rating);
+                          },
+                        ),
                       ),
                       SizedBox(height: 20),
                       SizedBox(
@@ -125,12 +128,7 @@ class InstructionsScreen extends StatelessWidget {
                         height: 50,
                         child: TextButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RateScreen(recipe: recipe),
-                              ),
-                            );
+                             Navigator.popUntil(context, (route) => route.isFirst);
                           },
                           style: TextButton.styleFrom(
                             elevation: 5.0,

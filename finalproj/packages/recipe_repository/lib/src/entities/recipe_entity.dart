@@ -13,6 +13,8 @@ class RecipeEntity {
   Macros macros;
   List<IngredientsEntity> ingredients;
   List<InstructionsEntity> instructions;
+  double rating;
+  int ratingCount;
 
 
   RecipeEntity({
@@ -25,6 +27,8 @@ class RecipeEntity {
     required this.macros,
     required this.ingredients,
     required this.instructions,
+    required this.rating,
+    required this.ratingCount,
 
 });
 
@@ -39,6 +43,8 @@ class RecipeEntity {
       'macros': macros.toEntity().toDocument(),
       'ingredients': ingredients.map((ingredients) => ingredients.toDocument()).toList(),
       'instructions': instructions.map((instructions) => instructions.toDocument()).toList(),
+      'rating': rating,
+      'ratingCount': ratingCount,
 
     };
   }
@@ -54,6 +60,8 @@ class RecipeEntity {
             macros: Macros.fromEntity(MacrosEntity.fromDocument(doc['macros'])),
               ingredients: (doc['ingredients'] as List<dynamic>).map((ingredientDoc) => IngredientsEntity.fromDocument(ingredientDoc)).toList(),
               instructions: (doc['instructions'] as List<dynamic>).map((instructionDoc) => InstructionsEntity.fromDocument(instructionDoc)).toList(),
+            rating: doc['rating'],
+            ratingCount: doc['ratingCount']
 
          );
   }

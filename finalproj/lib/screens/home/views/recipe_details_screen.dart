@@ -60,56 +60,76 @@ class DetailsScreen extends StatelessWidget {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              recipe.name,
-                              style: GoogleFonts.poppins(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(height: 8),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.access_time,
-                                        size: 18,
-                                        color: Color.fromARGB(255, 110, 110, 110),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      recipe.name,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      SizedBox(width: 4),
-                                      Text(
-                                        "${recipe.time.toString()}m",
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.normal,
-                                          color: const Color.fromARGB(255, 110, 110, 110),
-                                        ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                Icons.access_time,
+                                                size: 18,
+                                                color: Color.fromARGB(255, 110, 110, 110),
+                                              ),
+                                              SizedBox(width: 4),
+                                              Text(
+                                                "${recipe.time.toString()}m",
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: const Color.fromARGB(255, 110, 110, 110),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 4), 
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                Icons.star,
+                                                size: 18,
+                                                color: Colors.yellow,
+                                              ),
+                                              SizedBox(width: 4),
+                                              Text(
+                                                "${recipe.ratingCount.toString()} (${(recipe.rating).toStringAsFixed(1)})",
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: const Color.fromARGB(255, 110, 110, 110),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
+  
                       SizedBox(height: 12),
                       Row(
                         children: [
